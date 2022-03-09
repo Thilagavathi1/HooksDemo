@@ -1,26 +1,46 @@
 /* eslint-disable eslint-comments/no-unused-disable */
-import React, {useState,useMemo} from 'react';
+import React, {useState,useMemo,useCallback} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar, View, Text, TouchableOpacity,} from 'react-native';
 import Child from'./Child';
+
+const arr = [1, 5, 9, 5, 55, 24, 53, 12, 456, 4556];
 function App() {
-  const [counter,setCounter] = useState(0);
-  
+  const [parentComponentState,setParentComponentState] = useState(0);
+  const [childComponentState, setChildComponentState] = useState(0);
+
+
+
+  const incrementChildState = (number) => setChildComponentState(number);
+
+  const memoizedCallback = useCallback(
+    (state) => incrementChildState(state),
+    []
+  );
+
+  const getLargestNumber = () => {
+    console.log("from getLargestFunction");
+    return Math.max(...arr);
+  };
+  const memoizedValue = useMemo(() => getLargestNumber(), []);
+
+
   return (
       <View style={styles.container}>
         <View style={styles.parentView}>
           <View style={{flex:0.1}}>
-            <Text style={styles.parentFontStyle}>Hello from Parent : +{counter} </Text>
+            <Text style={styles.parentFontStyle}>Count from Parent : +{parentComponentState} </Text>
           </View>
 
-          <TouchableOpacity  style={styles.buttonStyle} onPress={()=>{setCounter(counter+1)}}>
-            <Text style={{color:'white',fontSize:14}}>Counter</Text>
+          <TouchableOpacity  style={styles.buttonStyle} onPress={()=>setParentComponentState(parentComponentState + 1)}>
+            <Text style={{color:'white',fontSize:14}}>Increment</Text>
           </TouchableOpacity>
       
             
         </View>
         <View style={styles.childView}>
-          <Child ></Child>
+          <Child number ={childComponentState} setNumber={memoizedCallback}></Child>
         </View>
+        <Text>{memoizedValue}</Text>
       </View>
   );
 
