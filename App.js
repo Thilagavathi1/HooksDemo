@@ -10,6 +10,8 @@ function App() {
 
 
 
+  const word = "helloworld"   
+
   const incrementChildState = (number) => setChildComponentState(number);
 
   const memoizedCallback = useCallback(
@@ -17,12 +19,23 @@ function App() {
     []
   );
 
-  const getLargestNumber = () => {
-    console.log("from getLargestFunction");
-    return Math.max(...arr);
-  };
-  const memoizedValue = useMemo(() => getLargestNumber(), []);
 
+
+  const computeLetterCount = () => {  
+    console.log("from memoizedValue");
+
+ 
+    let i = 0;  
+
+    while (i < 200000000) i++  
+
+    console.log(i)  
+
+    return word.length;  
+
+};   
+
+  const memoizedValue = useMemo(() => computeLetterCount(), []);
 
   return (
       <View style={styles.container}>
